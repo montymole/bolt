@@ -2,46 +2,61 @@
 
 # Bolting it together
 
-## We want
+This is not a framework. Just a starting point to build what you need.
+
+We use simple Bolt object to tie model, template and dom-element together
+so that changing object properties changes views.
+
+## want
 
 * Blazing speed
 * Simplicity
-* Ease of use
-    * change model -> autoupdate view(s)
 
-## We don't want
+## don't want
 
 * any massive library requirements
 * complicated framework
 * jquery or such
 * requirejs or such
  
-## and we don't care about
+## don't care about
 
- old browser support (old Internet Explorers)
+ old browser support (old Internet Explorers). For simplitys sake we use __defineGetter__  and __defineSetter__ which are not supported by old Internet Explorers. There are workaround, include them yourself if you need them.
 
-## Features
 
-* gulp generated and minified templates
-* simple Bolt object to tie model, template and dom-element together
-
-## How to use it
+## How to..
 
 install dependencies
 
     npm install
 
-### App code
+### Program goes to src/..
 
 modify and write your app src/main.js
 
-### Templates
-
+#### Templates
 are located in src/tpl
 
 For templating and such we use custom version of 
 https://github.com/honza/140medley
-    
+
+    <div id="#{this.id}">
+
+        <h1>#{this.title}</h1>
+        
+        <p>#{this.content}</p>
+
+        <a href="#{this.link}">#{this.link}</a>
+    </div>
+
+gulp minifies and concats escapes these to app.min.js
+
+## Build
+
+    gulp watch
+
+
+
 ### Server
 
 contents of public folder

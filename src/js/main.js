@@ -39,11 +39,10 @@ Bolt.prototype.refresh = function() {
 /*  Compile templates                   */
 /*--------------------------------------*/
 
-var views = {}; /* compiled templates */
+var views = v = {}; /* compiled templates */
 for (var k in tpl) {
-  views[k] = t(tpl[k]);
+  v[k] = t(tpl[k]);
 }
-
 
 var myBoltModel;
 
