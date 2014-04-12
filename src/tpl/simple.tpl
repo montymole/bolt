@@ -1,4 +1,4 @@
-<div id="#{this.id}">
+<div id="#{this.id}" style="background-color:#{this.color}">
 
 	<h1>#{this.title}</h1>
 	
@@ -6,6 +6,6 @@
 
 	<a href="#{this.link}">#{this.link}</a>
 
-	#{this.subitem}
+	#{this.subitem ? this.subitem : ''}
 
 </div>

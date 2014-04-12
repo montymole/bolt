@@ -19,6 +19,7 @@ var path = require('path'),
 var app_js = [
   'src/js/medley.js',
   'src/js/tpls.js',
+  'src/js/api.js',
   'src/js/main.js'
 ];
 

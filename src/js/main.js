@@ -4,6 +4,7 @@
 /* BOLT, mega simple way to do
 /* Auto-updating templates
 /*--------------------------------------*/
+var autoRefresh = false;
 
 function Bolt(obj, view, el) {
 
@@ -18,14 +19,15 @@ function Bolt(obj, view, el) {
   this.refresh();
 }
 
+
 /*-------------------------------------------*/
-/*  Add watcher update to the bolted object  */
+/*  Add (screw in) watcher to the bolted object
 /*-------------------------------------------*/
 Bolt.prototype.screw = function(key) {
 
   this.__defineSetter__(key, function(val) {
     this.obj[key] = val;
-    this.refresh();
+    if (autoRefresh) this.refresh();
   });
 
   this.__defineGetter__(key, function() {
@@ -34,28 +36,39 @@ Bolt.prototype.screw = function(key) {
 
 }
 
-Bolt.prototype.renderer = function () {
+/*--------------------------------------*/
+/*  populate with incoming object       */
+/*--------------------------------------*/
+Bolt.prototype.populate = function(obj, key) {
+  for (key in obj) {
+    if (this[key] === undefined) this.screw(key);
+    this[key] = obj[key];
+  }
+};
 
-	var o = {}, p;
-	//parse subrenderers if any
-	for (var key in this.obj) {
+Bolt.prototype.renderer = function(viewObject, property, key) {
 
-		p = this.obj[key];
+  viewObject = {};
 
-		if (p.renderer) {
-			o[key] = p.renderer();
-		} else 
-			o[key] = p;
-	}
+  //create a copy of object
+  for (key in this.obj) {
 
-	return this.view(o);
+    property = this.obj[key];
 
+    //recurse sub-bolts
+    if (property.renderer) {
+      viewObject[key] = property.renderer();
+    } else
+      viewObject[key] = property;
+  }
+
+  return this.view(viewObject);
 }
 
-Bolt.prototype.refresh = function() {
-  var el = $(this.el);
+Bolt.prototype.refresh = function(el, newEl) {
+  el = $(this.el);
   if (el) {
-  	el.innerHTML = this.renderer();
+    el.innerHTML = this.renderer();
   }
 }
 
@@ -73,41 +86,37 @@ for (var k in tpl) {
 /*  App Code -->    */
 /*--------------------------------------*/
 
-var myBoltModel;
+var blogModel;
+
+function getBlogs(num) {
+
+  function blogBolt(obj, pid) {
+    return new Bolt(obj, v.blog, '#app');
+  }
+
+  API.blogger.getBlogs(num, function(result, current) {
+    if (result.error) {
+      blogModel = {
+        error: v.error(result.error)
+      };
+    } else {
+      blogModel = current = blogBolt(result.shift());
+      for (var i = 0; i < result.length; i++) {
+        current.screw('next');
+        current.next = blogBolt(result[i]);
+        current = current.next;
+      }
+      blogModel.refresh();
+    }
+  });
+
+}
 
 function init() {
 
-  myBoltModel = new Bolt(
-    //init object
-    {
-      title: 'Bolting it together',
-      content: 'Keep It Simple Stupid',
-      link: 'http://fi.wikipedia.org/wiki/KISS-periaate',
-      subitem: new Bolt({
-        id: 'subitem',
-        title: 'Sub bolt',
-        content: 'Should be possible',
-        link: '#yeah_right'
-      }, v.simple, '#subitem')
+  getBlogs(10);
 
-    },
-    //view html renderer
-    v.simple,
-    //html target element
-    '#app'
-  );
 
-  alert('now lets change it');
-
-  myBoltModel.title = 'Super helppoa';
-
-  alert('Ok change sub bolt');
-
-  myBoltModel.subitem.title = 'Subitem title changed';
-
-  alert('Ok change it more');
-
-  myBoltModel.content = 'Super easy once the simple bolts are there!'
 }
 
 
