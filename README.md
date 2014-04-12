@@ -25,5 +25,27 @@
 * gulp generated and minified templates
 * simple Bolt object to tie model, template and dom-element together
 
-## a little more to come
+## How to use it
 
+install dependencies
+
+    npm install
+
+### App code
+
+modify and write your app src/main.js
+
+### Templates
+
+are located in src/tpl
+
+For templating and such we use custom version of 
+https://github.com/honza/140medley
+    
+### Server
+
+contents of public folder
+
+## Want more?
+
+DIY
