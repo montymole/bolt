@@ -7,7 +7,7 @@
 * Blazing speed
 * Simplicity
 * Ease of use
-    * change model autoupdate view(s)
+    * change model -> autoupdate view(s)
 
 ## We don't want
 
