@@ -2,8 +2,6 @@
 
 # Bolting it together
 
-This is just something I use myself, fuck you if you don't like it.
-
 ## We want
 
 * Blazing speed
