@@ -1,13 +1,31 @@
 
-# What we want
 
-Auto-updating templates
-Blazing speed
-simplicity
+# Bolting it together
 
-# What we don't want, javascript library requirements
+This is just something I use myself, fuck you if you don't like it.
 
-# solution
+## We want
 
--for dom pointing and templating we use minimal lib 'medley.js'
--simple Bolt object to tie model, template and dom-element together
+* Blazing speed
+* Simplicity
+* Ease of use
+    * change model autoupdate view(s)
+
+## We don't want
+
+* any massive library requirements
+* complicated framework
+* jquery or such
+* requirejs or such
+ 
+## and we don't care about
+
+ old browser support (old Internet Explorers)
+
+## Features
+
+* gulp generated and minified templates
+* simple Bolt object to tie model, template and dom-element together
+
+## a little more to come
+
