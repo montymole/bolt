@@ -19,7 +19,7 @@ function Bolt(obj, view, el) {
 }
 
 /*-------------------------------------------*/
-/*  Add watcher update to the bolted object  */ 
+/*  Add watcher update to the bolted object  */
 /*-------------------------------------------*/
 Bolt.prototype.screw = function(key) {
 
@@ -29,13 +29,34 @@ Bolt.prototype.screw = function(key) {
   });
 
   this.__defineGetter__(key, function() {
-    return obj[key];
+    return this.obj[key];
   });
 
 }
 
+Bolt.prototype.renderer = function () {
+
+	var o = {}, p;
+	//parse subrenderers if any
+	for (var key in this.obj) {
+
+		p = this.obj[key];
+
+		if (p.renderer) {
+			o[key] = p.renderer();
+		} else 
+			o[key] = p;
+	}
+
+	return this.view(o);
+
+}
+
 Bolt.prototype.refresh = function() {
-  this.el.innerHTML = this.view(this.obj);
+  var el = $(this.el);
+  if (el) {
+  	el.innerHTML = this.renderer();
+  }
 }
 
 /*--------------------------------------*/
@@ -49,7 +70,7 @@ for (var k in tpl) {
 
 
 /*--------------------------------------*/
-/*  App Code -->    */ 
+/*  App Code -->    */
 /*--------------------------------------*/
 
 var myBoltModel;
@@ -57,22 +78,32 @@ var myBoltModel;
 function init() {
 
   myBoltModel = new Bolt(
-  	//init object
-  	{
+    //init object
+    {
       title: 'Bolting it together',
       content: 'Keep It Simple Stupid',
-      link: 'http://fi.wikipedia.org/wiki/KISS-periaate'
+      link: 'http://fi.wikipedia.org/wiki/KISS-periaate',
+      subitem: new Bolt({
+        id: 'subitem',
+        title: 'Sub bolt',
+        content: 'Should be possible',
+        link: '#yeah_right'
+      }, v.simple, '#subitem')
+
     },
     //view html renderer
     v.simple,
-   	//html target element
-    $('#app')
-  )
-  ;
+    //html target element
+    '#app'
+  );
 
   alert('now lets change it');
 
   myBoltModel.title = 'Super helppoa';
+
+  alert('Ok change sub bolt');
+
+  myBoltModel.subitem.title = 'Subitem title changed';
 
   alert('Ok change it more');
 

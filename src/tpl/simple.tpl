@@ -5,4 +5,7 @@
 	<p>#{this.content}</p>
 
 	<a href="#{this.link}">#{this.link}</a>
+
+	#{this.subitem}
+
 </div>
