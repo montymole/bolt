@@ -57,7 +57,7 @@ gulp minifies and concats escapes these to app.min.js
 
 
 
-### Server
+### Serve
 
 contents of public folder
 

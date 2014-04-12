@@ -18,6 +18,9 @@ function Bolt(obj, view, el) {
   this.refresh();
 }
 
+/*-------------------------------------------*/
+/*  Add watcher update to the bolted object  */ 
+/*-------------------------------------------*/
 Bolt.prototype.screw = function(key) {
 
   this.__defineSetter__(key, function(val) {
@@ -39,28 +42,39 @@ Bolt.prototype.refresh = function() {
 /*  Compile templates                   */
 /*--------------------------------------*/
 
-var views = v = {}; /* compiled templates */
+var v = {}; /* compiled templates */
 for (var k in tpl) {
   v[k] = t(tpl[k]);
 }
+
+
+/*--------------------------------------*/
+/*  App Code -->    */ 
+/*--------------------------------------*/
 
 var myBoltModel;
 
 function init() {
 
-  myBoltModel = new Bolt({
+  myBoltModel = new Bolt(
+  	//init object
+  	{
+      title: 'Bolting it together',
+      content: 'Keep It Simple Stupid',
+      link: 'http://fi.wikipedia.org/wiki/KISS-periaate'
+    },
+    //view html renderer
+    v.simple,
+   	//html target element
+    $('#app')
+  )
+  ;
 
-  	title : 'Bolting it together',
-  	content : 'Keep It Simple Stupid',
-  	link: 'http://fi.wikipedia.org/wiki/KISS-periaate'
-
-  }, views.simple, $('#app'));
-
-  alert ('now lets change it');
+  alert('now lets change it');
 
   myBoltModel.title = 'Super helppoa';
 
-  alert ('Ok change it more');
+  alert('Ok change it more');
 
   myBoltModel.content = 'Super easy once the simple bolts are there!'
 }
