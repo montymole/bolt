@@ -1,18 +1,11 @@
 var path = require('path'),
   gulp = require('gulp'),
   changed = require('gulp-changed'),
-  compass = require('gulp-compass'),
-  minifycss = require('gulp-minify-css'),
-  minifyhtml = require('gulp-minify-html'),
-  jshint = require('gulp-jshint'),
   uglify = require('gulp-uglify'),
-  imagemin = require('gulp-imagemin'),
   rename = require('gulp-rename'),
   clean = require('gulp-clean'),
   concat = require('gulp-concat'),
   notify = require('gulp-notify'),
-  cache = require('gulp-cache'),
-  shell = require('gulp-shell'),
 
   bolttpl = require('gulp-bolt-tpl');
 
