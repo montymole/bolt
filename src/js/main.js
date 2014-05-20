@@ -1,121 +1,87 @@
 /*--------------------------------------*/
-/* 2014 Jussi Löf
-/*--------------------------------------*/
-/* BOLT, mega simple way to do
-/* Auto-updating templates
-/*--------------------------------------*/
-var autoRefresh = false;
-
-function Bolt(obj, view, el) {
-
-  this.obj = obj;
-  this.view = view;
-  this.el = el;
-
-  for (var key in obj) {
-    this.screw(key);
-  }
-
-  this.refresh();
-}
-
-
-/*-------------------------------------------*/
-/*  Add (screw in) watcher to the bolted object
-/*-------------------------------------------*/
-Bolt.prototype.screw = function(key) {
-
-  this.__defineSetter__(key, function(val) {
-    this.obj[key] = val;
-    if (autoRefresh) this.refresh();
-  });
-
-  this.__defineGetter__(key, function() {
-    return this.obj[key];
-  });
-
-}
-
-/*--------------------------------------*/
-/*  populate with incoming object       */
-/*--------------------------------------*/
-Bolt.prototype.populate = function(obj, key) {
-  for (key in obj) {
-    if (this[key] === undefined) this.screw(key);
-    this[key] = obj[key];
-  }
-};
-
-Bolt.prototype.renderer = function(viewObject, property, key) {
-
-  viewObject = {};
-
-  //create a copy of object
-  for (key in this.obj) {
-
-    property = this.obj[key];
-
-    //recurse sub-bolts
-    if (property.renderer) {
-      viewObject[key] = property.renderer();
-    } else
-      viewObject[key] = property;
-  }
-
-  return this.view(viewObject);
-}
-
-Bolt.prototype.refresh = function(el, newEl) {
-  el = $(this.el);
-  if (el) {
-    el.innerHTML = this.renderer();
-  }
-}
-
-/*--------------------------------------*/
 /*  Compile templates                   */
 /*--------------------------------------*/
 
 var v = {}; /* compiled templates */
 for (var k in tpl) {
-  v[k] = t(tpl[k]);
+    v[k] = t(tpl[k]);
 }
-
 
 /*--------------------------------------*/
 /*  App Code -->    */
 /*--------------------------------------*/
 
-var blogModel;
+function testCall1(cb) {
+    cb('Right away');
+};
 
-function getBlogs(num) {
+function testCall2(cb) {
 
-  function blogBolt(obj, pid) {
-    return new Bolt(obj, v.blog, '#app');
-  }
+    setTimeout(function() {
+        cb('a new value from promise getter '+Math.random());
+    }, 1000);
 
-  API.blogger.getBlogs(num, function(result, current) {
-    if (result.error) {
-      blogModel = {
-        error: v.error(result.error)
-      };
-    } else {
-      blogModel = current = blogBolt(result.shift());
-      for (var i = 0; i < result.length; i++) {
-        current.screw('next');
-        current.next = blogBolt(result[i]);
-        current = current.next;
-      }
-      blogModel.refresh();
-    }
+};
+
+function testCall3(cb) {
+
+  setTimeout(function () {
+    cb('dont forget my random promise:'+Math.random());
+  }, 1500);
+
+};
+
+
+var stuff = {
+    "something": "initial value",
+    "more": "not yet"
+};
+
+var stuffBolt = new Bolt(stuff, v.stuffView, '#app');
+
+var stuffVow = new Vow(stuffBolt);
+
+
+function boltPromiseTest() {
+
+    stuffVow.promise("something", testCall1);
+    stuffVow.promise("more", testCall3);
+
+    stuffVow.yield(function(r) {
+        console.log(stuff);
+        anotherTest();
+    });
+
+}
+
+function anotherTest() {
+
+    stuffVow.promise("something", testCall2);
+    stuffVow.yield(function(r) {
+      console.log('it should be active still?');
+      thirdTest();
+    });
+
+}
+
+
+function thirdTest() {
+
+  stuffVow.unPromise("more");
+  stuffVow.yield(function(r) {
+    console.log('unless im told to');
+    stuff.more = 'Dont change';
+    boltPromiseTest();
   });
 
 }
 
+
+
+
 function init() {
 
-  getBlogs(10);
-
+    boltPromiseTest();
 
 }
 
