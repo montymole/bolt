@@ -40,6 +40,8 @@ are located in src/tpl
 For templating and such we use custom version of 
 https://github.com/honza/140medley
 
+## myViewTemplate.tpl  example
+
     <div id="#{this.id}">
 
         <h1>#{this.title}</h1>
@@ -51,10 +53,36 @@ https://github.com/honza/140medley
 
 gulp minifies and concats escapes these to app.min.js
 
+## Bolt usage
+
+    var my_data = {
+        "id": "123",
+        "title": "Hello",
+        "content": "World",
+        "link": "http://mustavalo.fi"
+    };
+
+    var my_data_bolt = new Bolt(my_data, v.myViewTemplate, '#myElementId');
+
+## Vow usage
+    var my_data_vow = new Vow( my_data );
+    my_data_vow.promise("content", function(cb) {
+        //async/sync function ajax or what ever that get's your data 
+        //just remember do callback when ready
+        cb('your result here');
+        } );
+    my_data_vow.yield( function ( my_data ) {
+        //callback when my_data object promises are completely yielded
+        });
+
+## combined usage
+see main.js
+
+
+
 ## Build
 
     gulp watch
-
 
 
 ### Serve
