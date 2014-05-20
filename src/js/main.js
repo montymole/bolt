@@ -37,14 +37,20 @@ var stuff = {
     "more": "not yet"
 };
 
+
+//when stuff changes render stuffView inside #app element
 var stuffBolt = new Bolt(stuff, v.stuffView, '#app');
 
-var stuffVow = new Vow(stuffBolt);
+//if you want them to work together make your Vow to stuffBolt, not
+//directly to stuff, you can still write to stuff.something and it changes
+//accordingly
 
+var stuffVow = new Vow(stuffBolt);
 
 function boltPromiseTest() {
 
     stuffVow.promise("something", testCall1);
+
     stuffVow.promise("more", testCall3);
 
     stuffVow.yield(function(r) {
