@@ -11,6 +11,7 @@ function Bolt(obj, view, el) {
     this.obj = obj;
     this.view = view;
     this.el = el;
+    this.autorefresh = true;
 
     for (var key in obj) {
         this.screw(key);
@@ -28,7 +29,8 @@ Bolt.prototype.screw = function(key) {
 
     this.__defineSetter__(key, function(val) {
         this.obj[key] = val;
-        this.refresh();
+        if (this.autorefresh)
+            this.refresh();
     });
 
     this.__defineGetter__(key, function() {
