@@ -1,9 +1,7 @@
-
 /*--------------------------------------*/
 /* 2014 Jussi Löf
 /*--------------------------------------*/
-/* BOLT, mega simple way to do
-/* Auto-updating templates
+/* BOLT, Auto-updating templates
 /*--------------------------------------*/
 
 function Bolt(obj, view, el) {
@@ -21,59 +19,60 @@ function Bolt(obj, view, el) {
 
 }
 
-
+Bolt.prototype = {
+    /*-------------------------------------------*/
+    /*  Add (screw in) watcher to the bolted object
 /*-------------------------------------------*/
-/*  Add (screw in) watcher to the bolted object
-/*-------------------------------------------*/
-Bolt.prototype.screw = function(key) {
 
-    this.__defineSetter__(key, function(val) {
-        this.obj[key] = val;
-        if (this.autorefresh)
-            this.refresh();
-    });
+    screw: function(key) {
 
-    this.__defineGetter__(key, function() {
-        return this.obj[key];
-    });
+        this.__defineSetter__(key, function(val) {
+            this.obj[key] = val;
+            if (this.autorefresh)
+                this.refresh();
+        });
 
-}
+        this.__defineGetter__(key, function() {
+            return this.obj[key];
+        });
 
-/*--------------------------------------*/
-/*  populate with incoming object       */
-/*--------------------------------------*/
-Bolt.prototype.populate = function(obj, key) {
+    },
 
-    for (key in obj) {
-        if (this[key] === undefined) this.screw(key);
-        this[key] = obj[key];
-    }
+    /*--------------------------------------*/
+    /*  populate with incoming object       */
+    /*--------------------------------------*/
+    populate: function(obj, key) {
 
-};
+        for (key in obj) {
+            if (this[key] === undefined) this.screw(key);
+            this[key] = obj[key];
+        }
 
-Bolt.prototype.renderer = function(viewObject, property, key) {
+    },
 
-    viewObject = {};
+    renderer: function(viewObject, property, key) {
 
-    //create a copy of object
-    for (key in this.obj) {
+        viewObject = {};
 
-        property = this.obj[key];
+        //create a copy of object
+        for (key in this.obj) {
 
-        //recurse sub-bolts
-        if (property.renderer) {
-            viewObject[key] = property.renderer();
-        } else
-            viewObject[key] = property;
-    }
+            property = this.obj[key];
 
-    return this.view(viewObject);
+            //recurse sub-bolts
+            if (property.renderer) {
+                viewObject[key] = property.renderer();
+            } else
+                viewObject[key] = property;
+        }
 
-}
+        return this.view(viewObject);
 
-Bolt.prototype.refresh = function(el, newEl) {
-    el = $(this.el);
-    if (el) {
-        el.innerHTML = this.renderer();
+    },
+    refresh: function(el, newEl) {
+        el = $(this.el);
+        if (el) {
+            el.innerHTML = this.renderer();
+        }
     }
 }

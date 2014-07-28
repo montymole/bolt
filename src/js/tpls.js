@@ -1,1 +1,1 @@
-var tpl={"error":"<div class=\"error\"><b>#{this.code}</b> : #{this.message}</div>","stuffView":"<h1>Got something: #{this.something}</h1><p>#{this.more}</p>"};
+var tpl={"error":"<div class=\"error\"><b>#{this.code}</b> : #{this.message}</div>","jokeView":"<h1>#{this.title}</h1><p>#{this.joke1}</p><p>#{this.joke2}</p>and one more...<p>#{this.joke3}</p><a href=\"javascript:jokeVow.yield()\">More jokes?</a>"};

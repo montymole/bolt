@@ -11,85 +11,38 @@ for (var k in tpl) {
 /*  App Code -->    */
 /*--------------------------------------*/
 
-function testCall1(cb) {
-    cb('Right away');
+
+var jokes = {
+    title: 'Bolt & Vow Test',
+    joke1: 'waiting for result...',
+    joke2: 'waiting for result...',
+    joke3: 'waiting for result...'
 };
 
-function testCall2(cb) {
-
-    setTimeout(function() {
-        cb('a new value from promise getter '+Math.random());
-    }, 1000);
-
-};
-
-function testCall3(cb) {
-
-  setTimeout(function () {
-    cb('dont forget my random promise:'+Math.random());
-  }, 1500);
-
-};
-
-
-var stuff = {
-    "something": "initial value",
-    "more": "not yet"
-};
-
-
-//when stuff changes render stuffView inside #app element
-var stuffBolt = new Bolt(stuff, v.stuffView, '#app');
+//when stuff changes render jokeView inside #app element
+var jokeBolt = new Bolt(jokes, v.jokeView, '#app');
 
 //if you want them to work together make your Vow to stuffBolt, not
 //directly to stuff, you can still write to stuff.something and it changes
 //accordingly
 
-var stuffVow = new Vow(stuffBolt);
+var jokeVow = new Vow(jokeBolt);
 
-function boltPromiseTest() {
-
-    stuffVow.promise("something", testCall1);
-
-    stuffVow.promise("more", testCall3);
-
-    stuffVow.yield(function(r) {
-        console.log(stuff);
-        anotherTest();
+function getJoke(cb) {
+    API.icndb.get(function(r) {
+        cb(r.value.joke);
     });
-
 }
-
-function anotherTest() {
-
-    stuffVow.promise("something", testCall2);
-    stuffVow.yield(function(r) {
-      console.log('it should be active still?');
-      thirdTest();
-    });
-
-}
-
-
-function thirdTest() {
-
-  stuffVow.unPromise("more");
-  stuffVow.yield(function(r) {
-    console.log('unless im told to');
-    stuff.more = 'Dont change';
-    boltPromiseTest();
-  });
-
-}
-
-
-
 
 function init() {
+    // boltPromiseTest();
+    //lets get some chuck norris data
+    jokeVow.promise("joke1", getJoke);
+    jokeVow.promise("joke2", getJoke);
+    jokeVow.promise("joke3", getJoke);
+    jokeVow.yield();
 
-    boltPromiseTest();
 
 }
-
 
 document.addEventListener('DOMContentLoaded', init, false);
