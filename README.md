@@ -1,4 +1,4 @@
-
+# This is OLD rather use async await etc.
 
 # Bolting it together
 
@@ -22,7 +22,7 @@ so that changing object properties changes views.
  
 ## don't care about
 
- old browser support (old Internet Explorers). For simplitys sake we use __defineGetter__  and __defineSetter__ which are not supported by old Internet Explorers. There are workaround, include them yourself if you need them.
+ old browser support (old Internet Explorers). For simplitys sake we use __defineGetter__  and __defineSetter__ which are not supported by old Internet Explorers. There are workarounds, include them yourself if you need them.
 
 
 ## How to..
@@ -62,7 +62,7 @@ tie model and view for auto update
         "id": "123",
         "title": "Hello",
         "content": "World",
-        "link": "http://mustavalo.fi"
+        "link": "http://github.com"
     };
 
     var my_data_bolt = new Bolt(my_data, v.myViewTemplate, '#myElementId');
